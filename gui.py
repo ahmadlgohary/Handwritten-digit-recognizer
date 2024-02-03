@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import keras
 model = load_model('handwritten.model')
+from io import BytesIO
 def predict_digit(img):
     
     img = img.resize((28,28))                   #resize image to 28x28 pixels
@@ -33,9 +34,9 @@ class App(tk.Tk):
     def clear_all(self):
         self.canvas.delete("all")
     def classify_handwriting(self):
-        self.canvas.postscript(file = 'test.ps') 
+        ps = self.canvas.postscript() 
         # use PIL to convert to PNG 
-        im = Image.open('test.ps')
+        im = Image.open(BytesIO(ps.encode('utf-8')))
         digit, acc = predict_digit(im)
         digit =  digit.item()
         acc = max(acc)
